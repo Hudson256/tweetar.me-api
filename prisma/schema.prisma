@@ -1,0 +1,66 @@
+// This is your Prisma schema file,
+// learn more about it in the docs: https://pris.ly/d/prisma-schema
+
+generator client {
+  provider        = "prisma-client-js"
+  previewFeatures = ["referentialIntegrity"]
+}
+
+datasource db {
+  provider             = "mysql"
+  url                  = env("DATABASE_URL")
+  referentialIntegrity = "prisma"
+}
+
+model User {
+  id         String   @id @default(cuid())
+  avatar     String   @default("blue")
+  name       String
+  email      String   @unique
+  username   String   @unique
+  password   String
+  created_at DateTime @default(now())
+
+  tweets    Tweet[]
+  likes     Like[]
+  bookmarks Bookmark[]
+}
+
+model Tweet {
+  id         String   @id @default(cuid())
+  userId     String
+  text       String
+  created_at DateTime @default(now())
+
+  user User @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  likes     Like[]
+  bookmarks Bookmark[]
+
+  @@index([userId])
+}
+
+model Like {
+  userId  String
+  tweetId String
+
+  user  User  @relation(fields: [userId], references: [id], onDelete: Cascade)
+  tweet Tweet @relation(fields: [tweetId], references: [id], onDelete: Cascade)
+
+  @@id([userId, tweetId])
+  @@index([userId])
+  @@index([tweetId])
+}
+
+model Bookmark {
+  userId     String
+  tweetId    String
+  created_at DateTime @default(now())
+
+  user  User  @relation(fields: [userId], references: [id], onDelete: Cascade)
+  tweet Tweet @relation(fields: [tweetId], references: [id], onDelete: Cascade)
+
+  @@id([userId, tweetId])
+  @@index([userId])
+  @@index([tweetId])
+}
