@@ -32,7 +32,7 @@ A **Tweetar.me API** fornece os endpoints necessários para alimentar a platafor
 1. Clone o repositório:
 
    ```bash
-   git clone https://github.com/seuusuario/tweetar.me-api.git
+   git clone https://github.com/Hudson256/tweetar.me-api.git
    cd tweetar.me-api
 '''
 2. Instale as dependências:
